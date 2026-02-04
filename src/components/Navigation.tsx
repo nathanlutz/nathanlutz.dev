@@ -21,7 +21,7 @@ export default function Navigation() {
           href="/"
           className="font-bold text-lg hover:text-blue-500 transition-colors"
         >
-          nathanlutz.dev
+          Nathan Lutz
         </Link>
         <ul className="flex gap-1">
           {links.map((link) => (

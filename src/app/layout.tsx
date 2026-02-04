@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nathan Lutz | Software Engineer",
+  title: "Nathan Lutz",
   description: "Personal website of Nathan Lutz - Software Engineer at Microsoft working on AI",
 };
 

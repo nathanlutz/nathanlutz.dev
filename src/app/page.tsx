@@ -1,28 +1,34 @@
 export default function Home() {
   return (
     <div className="space-y-8">
-      <section className="text-center py-12">
-        <h1 className="text-4xl font-bold mb-2">Nathan Lutz</h1>
-        <p className="text-xl text-blue-500">Software Engineer at Microsoft</p>
-      </section>
-
       <section className="space-y-6 text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">About Me</h2>
+
         <p className="text-lg leading-relaxed">
-          Welcome! I&apos;m a software engineer at Microsoft, where I work on AI-powered
-          products and solutions. I&apos;m passionate about leveraging artificial intelligence
-          and machine learning to build innovative tools that make a real impact.
+          I&apos;m a software engineer with a deep interest in generative AI, search, and
+          evaluation systems. I&apos;m especially drawn to how LLMs interact with retrieval,
+          how relevance is measured, and how to design feedback loops that improve model
+          quality over time.
         </p>
 
         <p className="text-lg leading-relaxed">
-          My work focuses on the intersection of software engineering and AI/ML,
-          exploring how these technologies can be applied to solve complex problems
-          and create better user experiences.
+          I enjoy building the tooling, pipelines, and experimentation frameworks that help
+          teams understand whether AI systems are actually getting better—or just getting different.
         </p>
 
+        <div className="text-lg leading-relaxed">
+          <p className="mb-2">On the day-to-day, my work touches areas like:</p>
+          <ul className="list-disc list-inside space-y-1 ml-4">
+            <li>GenAI + Copilot experiences</li>
+            <li>Search and retrieval models</li>
+            <li>Evaluation frameworks and metrics</li>
+            <li>Model experimentation, A/B testing, and quality analysis</li>
+          </ul>
+        </div>
+
         <p className="text-lg leading-relaxed">
-          Feel free to explore the site to learn more about my experience, skills,
-          and projects. I&apos;m always open to connecting with others who share similar
-          interests in AI and technology.
+          Overall, I&apos;m motivated by the engineering and research challenges that make AI
+          systems reliable, interpretable, and grounded in real-world usage.
         </p>
       </section>
     </div>
