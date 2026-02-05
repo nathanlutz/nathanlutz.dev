@@ -24,7 +24,7 @@ export default function ResearchPage() {
           Research Notes
         </h1>
         <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-          Deep dives and breakdowns of interesting papers in AI, machine learning, and NLP.
+          Papers I found interesting and my notes trying to make sense of them.
         </p>
       </div>
 

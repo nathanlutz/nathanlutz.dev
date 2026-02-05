@@ -22,7 +22,7 @@ export default async function PaperPage({
 
   return (
     <article className="space-y-8">
-      <header className="space-y-4 pb-8 border-b border-zinc-200 dark:border-zinc-800">
+      <header className="space-y-4 pb-8">
         <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
           {paper.metadata.title}
         </h1>
@@ -65,6 +65,15 @@ export default async function PaperPage({
           </a>
         )}
       </header>
+
+      <div className="relative flex items-center justify-center my-8">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-zinc-300 dark:border-zinc-700"></div>
+        </div>
+        <div className="relative bg-background px-4 text-sm text-zinc-500 dark:text-zinc-500">
+          My Notes • {new Date(paper.metadata.postDate).toLocaleDateString()}
+        </div>
+      </div>
 
       <div className="prose prose-zinc dark:prose-invert max-w-none prose-ul:list-disc prose-ol:list-decimal prose-li:marker:text-zinc-400">
         <MDXContent slug={slug} />
