@@ -3,7 +3,7 @@ import type { MDXComponents } from 'mdx/types';
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     h1: ({ children }) => (
-      <h1 className="text-3xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">
+      <h1 className="text-3xl font-bold mb-6 mt-8 text-zinc-900 dark:text-zinc-100">
         {children}
       </h1>
     ),
@@ -18,7 +18,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </h3>
     ),
     p: ({ children }) => (
-      <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed mb-5">
+      <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed mb-5">
         {children}
       </p>
     ),
@@ -31,21 +31,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <em className="italic text-zinc-700 dark:text-zinc-300">
         {children}
       </em>
-    ),
-    ul: ({ children }) => (
-      <ul className="space-y-2 mb-6 ml-6 text-zinc-600 dark:text-zinc-400">
-        {children}
-      </ul>
-    ),
-    ol: ({ children }) => (
-      <ol className="space-y-3 mb-6 ml-6 text-zinc-600 dark:text-zinc-400">
-        {children}
-      </ol>
-    ),
-    li: ({ children }) => (
-      <li className="leading-relaxed">
-        {children}
-      </li>
     ),
     code: ({ children }) => (
       <code className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-sm font-mono">
@@ -71,6 +56,21 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <blockquote className="border-l-4 border-zinc-300 dark:border-zinc-700 pl-4 italic my-4 text-zinc-600 dark:text-zinc-400">
         {children}
       </blockquote>
+    ),
+    ul: ({ children }) => (
+      <ul className="list-disc list-outside ml-6 space-y-2 mb-6 text-zinc-600 dark:text-zinc-400">
+        {children}
+      </ul>
+    ),
+    ol: ({ children }) => (
+      <ol className="list-decimal list-outside ml-6 space-y-2 mb-6 text-zinc-600 dark:text-zinc-400">
+        {children}
+      </ol>
+    ),
+    li: ({ children }) => (
+      <li className="leading-relaxed pl-1">
+        {children}
+      </li>
     ),
     ...components,
   };

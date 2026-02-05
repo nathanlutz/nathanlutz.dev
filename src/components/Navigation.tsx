@@ -14,7 +14,7 @@ export default function Navigation() {
 
   // Add Research link if feature is enabled
   if (isFeatureEnabled('researchNotes')) {
-    links.splice(1, 0, { href: "/research", label: "Research" });
+    links.splice(1, 0, { href: "/research", label: "Research Notes" });
   }
 
   return (

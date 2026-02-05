@@ -23,7 +23,7 @@ export default async function PaperPage({
   return (
     <article className="space-y-8">
       <header className="space-y-4 pb-8 border-b border-zinc-200 dark:border-zinc-800">
-        <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
           {paper.metadata.title}
         </h1>
 
@@ -66,7 +66,7 @@ export default async function PaperPage({
         )}
       </header>
 
-      <div className="prose prose-zinc dark:prose-invert max-w-none">
+      <div className="prose prose-zinc dark:prose-invert max-w-none prose-ul:list-disc prose-ol:list-decimal prose-li:marker:text-zinc-400">
         <MDXContent slug={slug} />
       </div>
     </article>
