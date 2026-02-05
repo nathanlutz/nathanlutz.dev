@@ -1,3 +1,5 @@
+import { Github, Linkedin, Mail } from "lucide-react";
+
 export default function Contact() {
   return (
     <div className="space-y-8">
@@ -15,7 +17,7 @@ export default function Contact() {
           rel="noopener noreferrer"
           className="flex items-center gap-3 p-4 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:border-blue-500/50 transition-colors"
         >
-          <span className="text-2xl">GitHub</span>
+          <Github className="w-6 h-6" />
           <span className="text-zinc-500">github.com/nathanlutz</span>
         </a>
 
@@ -25,16 +27,16 @@ export default function Contact() {
           rel="noopener noreferrer"
           className="flex items-center gap-3 p-4 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:border-blue-500/50 transition-colors"
         >
-          <span className="text-2xl">LinkedIn</span>
+          <Linkedin className="w-6 h-6" />
           <span className="text-zinc-500">linkedin.com/in/nathanlutz1</span>
         </a>
 
         <a
-          href="mailto:hello@nathanlutz.dev"
+          href="mailto:me@nathanlutz.dev"
           className="flex items-center gap-3 p-4 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:border-blue-500/50 transition-colors"
         >
-          <span className="text-2xl">Email</span>
-          <span className="text-zinc-500">hello@nathanlutz.dev</span>
+          <Mail className="w-6 h-6" />
+          <span className="text-zinc-500">me@nathanlutz.dev</span>
         </a>
       </div>
     </div>

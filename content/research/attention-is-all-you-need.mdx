@@ -1,0 +1,46 @@
+---
+title: "Attention Is All You Need"
+authors: "Vaswani et al."
+publicationDate: "2017-06-12"
+postDate: "2024-01-15"
+tags: ["NLP", "Transformers", "Attention"]
+paperUrl: "https://arxiv.org/abs/1706.03762"
+slug: "attention-is-all-you-need"
+---
+
+# Introduction
+
+This paper introduced the Transformer architecture, which revolutionized NLP and became the foundation for modern large language models like GPT and BERT.
+
+## Key Contributions
+
+The paper made three major contributions:
+
+1. **Self-Attention Mechanism** - Allows the model to weigh the importance of different words in a sequence when processing each word
+2. **Positional Encoding** - Adds information about word position since the architecture doesn't have inherent order awareness
+3. **Multi-Head Attention** - Uses multiple attention mechanisms in parallel to capture different types of relationships
+
+## Why It Matters
+
+Before transformers, RNNs and LSTMs were the standard for sequence modeling. These architectures processed text sequentially, which was slow and struggled with long-range dependencies.
+
+Transformers changed everything by:
+- Processing all words in parallel (much faster training)
+- Capturing long-range dependencies more effectively
+- Scaling better with more data and compute
+
+## Practical Example
+
+Imagine the sentence: "The animal didn't cross the street because it was too tired."
+
+The word "it" could refer to either "animal" or "street". The self-attention mechanism allows the model to learn that "it" most likely refers to "animal" by looking at all the words in context simultaneously.
+
+## Impact
+
+This architecture became the foundation for:
+- GPT series (text generation)
+- BERT (text understanding)
+- Vision Transformers (image processing)
+- Many other domains beyond NLP
+
+The paper literally transformed the field, making "attention" the primary mechanism in modern AI systems.

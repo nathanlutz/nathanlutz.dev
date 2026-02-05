@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { isFeatureEnabled } from "@/lib/features";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -10,6 +11,11 @@ export default function Navigation() {
     { href: "/", label: "Home" },
     { href: "/contact", label: "Contact" },
   ];
+
+  // Add Research link if feature is enabled
+  if (isFeatureEnabled('researchNotes')) {
+    links.splice(1, 0, { href: "/research", label: "Research" });
+  }
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-zinc-200 dark:border-zinc-800">
@@ -26,7 +32,7 @@ export default function Navigation() {
               <Link
                 href={link.href}
                 className={`px-3 py-2 rounded-lg text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 ${
-                  pathname === link.href
+                  pathname === link.href || (link.href === "/research" && pathname?.startsWith("/research"))
                     ? "text-blue-500 font-medium"
                     : "text-zinc-600 dark:text-zinc-400"
                 }`}
