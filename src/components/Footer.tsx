@@ -31,7 +31,7 @@ export default function Footer() {
               <Github className="w-5 h-5" />
             </a>
             <a
-              href="https://linkedin.com/in/nathan-lutz"
+              href="https://www.linkedin.com/in/nathanlutz1/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
