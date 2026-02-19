@@ -20,10 +20,8 @@ export default function ResearchPage() {
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-          Research Notes
-        </h1>
-        <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+        <h1>Research Notes</h1>
+        <p>
           Papers I found interesting and my notes trying to make sense of them.
         </p>
       </div>
@@ -40,14 +38,14 @@ export default function ResearchPage() {
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-4">
                   <Link href={`/research/${paper.metadata.slug}`}>
-                    <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 hover:text-blue-500 transition-colors">
+                    <h2 className="text-xl hover:text-blue-500 transition-colors">
                       {paper.metadata.title}
                     </h2>
                   </Link>
                   <FileText className="w-5 h-5 text-zinc-400 flex-shrink-0" />
                 </div>
 
-                <div className="text-sm text-zinc-500 space-y-1">
+                <div className="meta space-y-1">
                   <p>{paper.metadata.authors}</p>
                   <p>
                     Published: {new Date(paper.metadata.publicationDate).toLocaleDateString()}
@@ -60,7 +58,7 @@ export default function ResearchPage() {
                   {paper.metadata.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-1 text-xs rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+                      className="px-2 py-1 text-xs font-medium rounded-md bg-zinc-100 dark:bg-zinc-800"
                     >
                       {tag}
                     </span>
@@ -72,7 +70,7 @@ export default function ResearchPage() {
                     href={paper.metadata.paperUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-blue-500 hover:underline"
+                    className="inline-flex items-center gap-1 meta text-blue-500 hover:underline"
                   >
                     View original paper
                     <ExternalLink className="w-3 h-3" />

@@ -23,11 +23,11 @@ export default async function PaperPage({
   return (
     <article className="space-y-8">
       <header className="space-y-4 pb-8">
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+        <h1>
           {paper.metadata.title}
         </h1>
 
-        <div className="flex flex-wrap gap-4 text-sm text-zinc-600 dark:text-zinc-400">
+        <div className="flex flex-wrap gap-4 meta">
           <div className="flex items-center gap-2">
             <User className="w-4 h-4" />
             <span>{paper.metadata.authors}</span>
@@ -46,7 +46,7 @@ export default async function PaperPage({
           {paper.metadata.tags.map((tag) => (
             <span
               key={tag}
-              className="px-3 py-1 text-sm rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+              className="px-3 py-1 meta rounded-lg bg-zinc-100 dark:bg-zinc-800"
             >
               {tag}
             </span>
@@ -58,7 +58,7 @@ export default async function PaperPage({
             href={paper.metadata.paperUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500/50 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 meta border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-blue-500/50 transition-colors"
           >
             <ExternalLink className="w-4 h-4" />
             Read original paper
@@ -70,7 +70,7 @@ export default async function PaperPage({
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-zinc-300 dark:border-zinc-700"></div>
         </div>
-        <div className="relative bg-background px-4 text-sm text-zinc-500 dark:text-zinc-500">
+        <div className="relative bg-background px-4 meta">
           My Notes • {new Date(paper.metadata.postDate).toLocaleDateString()}
         </div>
       </div>
