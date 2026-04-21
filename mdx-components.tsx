@@ -3,32 +3,27 @@ import type { MDXComponents } from 'mdx/types';
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     h1: ({ children }) => (
-      <h1 className="text-3xl font-bold mb-6 mt-8 text-zinc-900 dark:text-zinc-100">
+      <h1 className="mb-6 mt-8">
         {children}
       </h1>
     ),
     h2: ({ children }) => (
-      <h2 className="text-2xl font-semibold mb-4 mt-8 text-zinc-900 dark:text-zinc-100">
+      <h2 className="mb-4 mt-8">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-xl font-semibold mb-3 mt-6 text-zinc-900 dark:text-zinc-100">
+      <h3 className="mb-3 mt-6">
         {children}
       </h3>
     ),
     p: ({ children }) => (
-      <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed mb-5">
+      <p className="mb-5">
         {children}
       </p>
     ),
-    strong: ({ children }) => (
-      <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
-        {children}
-      </strong>
-    ),
     em: ({ children }) => (
-      <em className="italic text-zinc-700 dark:text-zinc-300">
+      <em className="italic">
         {children}
       </em>
     ),
@@ -53,17 +48,17 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </a>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-zinc-300 dark:border-zinc-700 pl-4 italic my-4 text-zinc-600 dark:text-zinc-400">
+      <blockquote className="border-l-4 border-zinc-300 dark:border-zinc-700 pl-4 italic my-4">
         {children}
       </blockquote>
     ),
     ul: ({ children }) => (
-      <ul className="list-disc list-outside ml-6 space-y-2 mb-6 text-zinc-600 dark:text-zinc-400">
+      <ul className="list-disc list-outside ml-6 space-y-2 mb-6">
         {children}
       </ul>
     ),
     ol: ({ children }) => (
-      <ol className="list-decimal list-outside ml-6 space-y-2 mb-6 text-zinc-600 dark:text-zinc-400">
+      <ol className="list-decimal list-outside ml-6 space-y-2 mb-6">
         {children}
       </ol>
     ),
