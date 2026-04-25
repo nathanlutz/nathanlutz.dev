@@ -1,19 +1,7 @@
-import { readFileSync } from "fs";
-import { join } from "path";
-import { codeToHtml } from "shiki";
-import GraphCard from "@/components/GraphCard";
+import Link from "next/link";
+import { graphs } from "@/lib/graphs";
 
-export default async function Graphs() {
-  const code = readFileSync(
-    join(process.cwd(), "graphs", "wealth_distribution.py"),
-    "utf-8"
-  );
-
-  const highlightedCode = await codeToHtml(code, {
-    lang: "python",
-    theme: "github-light",
-  });
-
+export default function Graphs() {
   return (
     <div className="space-y-12">
       <div className="space-y-4">
@@ -21,32 +9,34 @@ export default async function Graphs() {
         <p>Graphs and data I find interesting.</p>
       </div>
 
-      <GraphCard
-        title="US Wealth Distribution (1945–2019)"
-        description={
-          <>
-            Mean net worth per adult by wealth group, animated annually. Data from{" "}
-            <a
-              href="https://gabriel-zucman.eu/usdina/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
-            >
-              Piketty, Saez & Zucman (2022)
-            </a>
-            , real 2019 dollars.
-          </>
-        }
-        gifSrc="/graphs/wealth_distribution.gif"
-        gifAlt="Animated chart of mean US net worth by wealth group, 1945–2019"
-        highlightedCode={highlightedCode}
-        rawCode={code}
-        codeMeta={{
-          language: "Python",
-          version: "3.12",
-          libraries: ["matplotlib", "numpy", "openpyxl"],
-        }}
-      />
+      <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+        {graphs.map((graph) => (
+          <Link
+            key={graph.slug}
+            href={`/graphs/${graph.slug}`}
+            className="flex items-center gap-4 py-4 group"
+          >
+            <div className="w-14 h-10 shrink-0 rounded-md overflow-hidden border border-zinc-200 dark:border-zinc-800">
+              <img
+                src={graph.thumbnailSrc}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium group-hover:text-blue-500 transition-colors truncate">
+                {graph.title}
+              </p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 truncate">
+                {graph.description}
+              </p>
+            </div>
+            <span className="text-zinc-300 dark:text-zinc-600 group-hover:text-zinc-500 dark:group-hover:text-zinc-400 transition-colors shrink-0">
+              →
+            </span>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
