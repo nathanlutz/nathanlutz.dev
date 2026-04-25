@@ -27,6 +27,18 @@ export default async function GraphDetail({
     theme: "github-light",
   });
 
+  const manifest: { years: number[] } = JSON.parse(
+    readFileSync(
+      join(process.cwd(), "public", graph.framesManifest.replace(/^\//, "")),
+      "utf-8"
+    )
+  );
+
+  const frames = manifest.years.map((year) => ({
+    year,
+    src: `${graph.framesDir}_${year}.jpg`,
+  }));
+
   return (
     <div className="space-y-8">
       <GraphCard
@@ -45,7 +57,7 @@ export default async function GraphDetail({
             .
           </>
         }
-        gifSrc={graph.gifSrc}
+        frames={frames}
         gifAlt={graph.gifAlt}
         highlightedCode={highlightedCode}
         rawCode={code}

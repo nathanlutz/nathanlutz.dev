@@ -10,8 +10,11 @@ Output: public/graphs/wealth_distribution.gif
 
 import os
 import io
+import json
 import warnings
 import urllib.request
+
+from PIL import Image
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -152,3 +155,22 @@ ani = animation.FuncAnimation(
 out = os.path.join(os.path.dirname(__file__), "..", "public", "graphs", "wealth_distribution.gif")
 ani.save(out, writer="pillow", fps=1.3, dpi=120)
 print(f"Saved {out}  ({len(years)} frames, {years[0]}–{years[-1]})")
+
+# Extract individual frames as JPEG for the interactive player
+frames_dir = os.path.join(os.path.dirname(__file__), "..", "public", "graphs", "frames")
+os.makedirs(frames_dir, exist_ok=True)
+
+gif_img = Image.open(out)
+for i, year in enumerate(years):
+    try:
+        gif_img.seek(i)
+        gif_img.convert("RGB").save(
+            os.path.join(frames_dir, f"wealth_distribution_{year}.jpg"), "JPEG", quality=85
+        )
+    except EOFError:
+        break
+
+with open(os.path.join(frames_dir, "wealth_distribution_manifest.json"), "w") as f:
+    json.dump({"years": years}, f)
+
+print(f"Saved {len(years)} frames -> {frames_dir}")
