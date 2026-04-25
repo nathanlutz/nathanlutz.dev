@@ -127,10 +127,10 @@ ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"${x/1e6:.1f}M"))
 ax.set_xticks(X_TICKS)
 ax.set_xticklabels(X_LABELS, fontsize=10)
 ax.set_xlabel("Percentile (mean wealth of each group)", fontsize=11)
-ax.set_ylabel("Mean net worth per adult (real 2019 USD)", fontsize=11)
+ax.set_ylabel("Mean net worth per adult (inflation-adjusted, 2019 USD)", fontsize=11)
 ax.set_title(
     "Mean Net Worth by Wealth Group, USA 1945–2019\n"
-    "Source: Piketty, Saez & Zucman (2022) — real 2019 dollars, equal-split adults 20+",
+    "Source: Piketty, Saez & Zucman (2022) — inflation-adjusted to 2019 dollars, equal-split adults 20+",
     fontsize=12,
 )
 ax.grid(True, alpha=0.3)
