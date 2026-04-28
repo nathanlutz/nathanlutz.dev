@@ -63,7 +63,26 @@ export default function GraphPlayer({
             aria-label={playing ? "Pause" : "Play"}
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-zinc-200 text-base leading-none text-zinc-600 transition-colors hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100"
           >
-            {playing ? "⏸" : "▶"}
+            {playing ? (
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="currentColor"
+              >
+                <rect x="6.5" y="5" width="4" height="14" rx="1" />
+                <rect x="13.5" y="5" width="4" height="14" rx="1" />
+              </svg>
+            ) : (
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-4 w-4 translate-x-[1px]"
+                fill="currentColor"
+              >
+                <path d="M8 5.5v13l10-6.5-10-6.5Z" />
+              </svg>
+            )}
           </button>
 
           <div className="flex-1">

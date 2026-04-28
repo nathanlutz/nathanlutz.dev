@@ -11,8 +11,8 @@ function formatShortPostedDate(date: string) {
 
 export default function Graphs() {
   return (
-    <div className="space-y-12">
-      <div className="space-y-4">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="space-y-2 sm:space-y-3">
         <h1>Graphs & Data</h1>
         <p>Graphs and data I find interesting.</p>
       </div>
