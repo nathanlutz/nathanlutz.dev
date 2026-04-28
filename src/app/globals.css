@@ -59,6 +59,18 @@ small, .meta {
   font-weight: 500;
 }
 
+.graph-code {
+  background: #0f111a;
+}
+
+.graph-code pre {
+  background: #0f111a !important;
+}
+
+.graph-code code {
+  color: #d4d4d4;
+}
+
 @media (prefers-color-scheme: dark) {
   h1, h2, h3 {
     color: var(--foreground);

@@ -48,10 +48,10 @@ export default function Navigation() {
   return (
     <>
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-zinc-200 dark:border-zinc-800">
-        <div className="max-w-4xl mx-auto px-10 py-[26px] flex items-center justify-between">
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-5 sm:px-6 md:px-10 md:py-[26px]">
           <Link
             href="/"
-            className="font-extrabold text-lg uppercase tracking-[0.05em] hover:text-blue-500 transition-colors"
+            className="pr-4 text-base font-extrabold uppercase tracking-[0.05em] transition-colors hover:text-blue-500 sm:text-lg"
           >
             Nathan Lutz
           </Link>

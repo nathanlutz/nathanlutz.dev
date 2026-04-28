@@ -33,7 +33,7 @@ export default function GraphPlayer({
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     if (playing) {
-      intervalRef.current = setInterval(tick, 770);
+      intervalRef.current = setInterval(tick, 250);
     }
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -41,40 +41,43 @@ export default function GraphPlayer({
   }, [playing, tick]);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <img
         src={frames[index].src}
         alt={alt}
         className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800"
       />
 
-      <div className="flex items-center gap-3 px-1">
-        <button
-          onClick={() => setPlaying((p) => !p)}
-          aria-label={playing ? "Pause" : "Play"}
-          className="shrink-0 text-base leading-none text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors w-5 text-center"
-        >
-          {playing ? "⏸" : "▶"}
-        </button>
+      <div className="rounded-xl border border-zinc-200 bg-white/70 px-3 py-3 dark:border-zinc-800 dark:bg-zinc-950/60">
+        <div className="mb-3 flex items-center justify-between text-xs text-zinc-400 select-none">
+          <span>{frames[0].year}</span>
+          <span className="font-medium text-zinc-700 dark:text-zinc-200">
+            {frames[index].year}
+          </span>
+          <span>{frames[frames.length - 1].year}</span>
+        </div>
 
-        <div className="flex-1 space-y-1">
-          <input
-            type="range"
-            min={0}
-            max={frames.length - 1}
-            value={index}
-            onChange={(e) => {
-              setPlaying(false);
-              setIndex(Number(e.target.value));
-            }}
-            className="w-full accent-[#231f20] cursor-pointer"
-          />
-          <div className="flex justify-between text-xs text-zinc-400 select-none">
-            <span>{frames[0].year}</span>
-            <span className="font-medium text-zinc-600 dark:text-zinc-300">
-              {frames[index].year}
-            </span>
-            <span>{frames[frames.length - 1].year}</span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setPlaying((p) => !p)}
+            aria-label={playing ? "Pause" : "Play"}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-zinc-200 text-base leading-none text-zinc-600 transition-colors hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-zinc-100"
+          >
+            {playing ? "⏸" : "▶"}
+          </button>
+
+          <div className="flex-1">
+            <input
+              type="range"
+              min={0}
+              max={frames.length - 1}
+              value={index}
+              onChange={(e) => {
+                setPlaying(false);
+                setIndex(Number(e.target.value));
+              }}
+              className="w-full cursor-pointer accent-[#231f20]"
+            />
           </div>
         </div>
       </div>

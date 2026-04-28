@@ -1,44 +1,24 @@
 """
-US Wealth Distribution, 1945–2019
+US Wealth Distribution, 1945-2019
 Mean net worth per adult by wealth group, animated by year.
 
-Data: Piketty, Saez & Zucman (2022) — Appendix Tables II (Distributional)
+Data: Piketty, Saez & Zucman (2022) - Appendix Tables II (Distributional)
       https://gabriel-zucman.eu/usdina/
 Units: Real 2019 USD, equal-split adults 20+
 Output: public/graphs/wealth_distribution.gif
 """
 
-import os
-import io
-import json
-import warnings
-import urllib.request
-
-from PIL import Image
-
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import openpyxl
+import matplotlib.pyplot as plt
 
-warnings.filterwarnings("ignore")
+from psz_graph_utils import (
+    load_psz_workbook,
+    save_animation_and_frames,
+    smooth_curve,
+    smooth_upper_bounds,
+)
 
-# ---------------------------------------------------------------------------
-# Data loading
-# ---------------------------------------------------------------------------
-
-PSZ_CACHE = os.path.join(os.path.dirname(__file__), "psz2022.xlsx")
-
-if not os.path.exists(PSZ_CACHE):
-    print("Downloading PSZ 2022 data…")
-    url = "https://gabriel-zucman.eu/files/PSZ2022AppendixTablesII(Distrib).xlsx"
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req) as r:
-        data = r.read()
-    with open(PSZ_CACHE, "wb") as f:
-        f.write(data)
-
-wb = openpyxl.load_workbook(PSZ_CACHE, read_only=True, data_only=True)
+wb = load_psz_workbook()
 
 # avghweal sheet — col 1: mean wealth of all adults (avghweal0indiv)
 avg_by_year = {
@@ -98,18 +78,8 @@ years     = sorted(plot_data)
 X_TICKS  = [1,       2,       3,        4,         5]
 X_LABELS = ["90th", "99th", "99.9th", "99.99th", "99.999th"]
 
-def smooth_curve(pts):
-    xs = np.array([0] + [p[0] for p in pts])
-    ys = np.array([0.0] + [p[1] for p in pts])
-    x_smooth = np.linspace(0, xs[-1], 500)
-    return x_smooth, np.interp(x_smooth, xs, ys)
-
-def smooth_ylims(ymaxes, window=3):
-    n = len(ymaxes)
-    return [max(ymaxes[max(0, i-window):min(n, i+window+1)]) for i in range(n)]
-
 raw_ymaxes = [max(y for _, y in plot_data[yr]) * 1.08 for yr in years]
-ylims      = smooth_ylims(raw_ymaxes)
+ylims      = smooth_upper_bounds(raw_ymaxes)
 
 # ---------------------------------------------------------------------------
 # Build and save GIF
@@ -132,8 +102,8 @@ ax.set_xticklabels(X_LABELS, fontsize=10)
 ax.set_xlabel("Percentile (mean wealth of each group)", fontsize=11)
 ax.set_ylabel("Mean net worth per adult (inflation-adjusted, 2019 USD)", fontsize=11)
 ax.set_title(
-    "Mean Net Worth by Wealth Group, USA 1945–2019\n"
-    "Source: Piketty, Saez & Zucman (2022) — inflation-adjusted to 2019 dollars, equal-split adults 20+",
+    "Mean Net Worth by Wealth Group, USA 1945-2019\n"
+    "Source: Piketty, Saez & Zucman (2022) - inflation-adjusted to 2019 dollars, equal-split adults 20+",
     fontsize=12,
 )
 ax.grid(True, alpha=0.3)
@@ -148,29 +118,20 @@ def update(frame):
     return line, dots, yr_label
 
 ani = animation.FuncAnimation(
-    fig, update, frames=len(years),
-    interval=700, blit=False, repeat=True, repeat_delay=1500,
+    fig,
+    update,
+    frames=len(years),
+    interval=700,
+    blit=False,
+    repeat=True,
+    repeat_delay=1500,
 )
 
-out = os.path.join(os.path.dirname(__file__), "..", "public", "graphs", "wealth_distribution.gif")
-ani.save(out, writer="pillow", fps=1.3, dpi=120)
-print(f"Saved {out}  ({len(years)} frames, {years[0]}–{years[-1]})")
-
-# Extract individual frames as JPEG for the interactive player
-frames_dir = os.path.join(os.path.dirname(__file__), "..", "public", "graphs", "frames")
-os.makedirs(frames_dir, exist_ok=True)
-
-gif_img = Image.open(out)
-for i, year in enumerate(years):
-    try:
-        gif_img.seek(i)
-        gif_img.convert("RGB").save(
-            os.path.join(frames_dir, f"wealth_distribution_{year}.jpg"), "JPEG", quality=85
-        )
-    except EOFError:
-        break
-
-with open(os.path.join(frames_dir, "wealth_distribution_manifest.json"), "w") as f:
-    json.dump({"years": years}, f)
-
-print(f"Saved {len(years)} frames -> {frames_dir}")
+save_animation_and_frames(
+    fig,
+    ani,
+    asset_base="wealth_distribution",
+    years=years,
+    fps=1.3,
+    dpi=120,
+)
