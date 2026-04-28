@@ -20,7 +20,7 @@ const PYTHON_GRAPH_CODE_META = {
   language: "Python",
   version: "3.13",
   libraries: ["matplotlib", "numpy", "openpyxl"],
-} as const;
+};
 
 function createPszGraph({
   slug,

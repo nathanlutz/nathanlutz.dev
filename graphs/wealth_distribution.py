@@ -5,7 +5,7 @@ Mean net worth per adult by wealth group, animated by year.
 Data: Piketty, Saez & Zucman (2022) - Appendix Tables II (Distributional)
       https://gabriel-zucman.eu/usdina/
 Units: Real 2019 USD, equal-split adults 20+
-Output: public/graphs/wealth_distribution.gif
+Output: public/graphs/frames/wealth_distribution_*.jpg
 """
 
 import matplotlib.animation as animation

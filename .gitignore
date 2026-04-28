@@ -42,3 +42,5 @@ next-env.d.ts
 
 # data cache
 graphs/psz2022.xlsx
+graphs/__pycache__/
+*.pyc

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 import urllib.request
 import warnings
 from typing import Iterable, Sequence
@@ -89,30 +90,33 @@ def save_animation_and_frames(
     dpi: int = 120,
     jpeg_quality: int = 85,
 ) -> None:
-    os.makedirs(PUBLIC_GRAPHS_DIR, exist_ok=True)
     os.makedirs(PUBLIC_FRAMES_DIR, exist_ok=True)
 
-    gif_path = os.path.join(PUBLIC_GRAPHS_DIR, f"{asset_base}.gif")
+    with tempfile.NamedTemporaryFile(suffix=".gif", delete=False) as tmp_file:
+        gif_path = tmp_file.name
+
     ani.save(gif_path, writer="pillow", fps=fps, dpi=dpi)
-    print(f"Saved {gif_path}")
 
-    gif_img = Image.open(gif_path)
-    years_list = list(years)
+    try:
+        gif_img = Image.open(gif_path)
+        years_list = list(years)
 
-    for frame_index, year in enumerate(years_list):
-        try:
-            gif_img.seek(frame_index)
-            gif_img.convert("RGB").save(
-                os.path.join(PUBLIC_FRAMES_DIR, f"{asset_base}_{year}.jpg"),
-                "JPEG",
-                quality=jpeg_quality,
-            )
-        except EOFError:
-            break
+        for frame_index, year in enumerate(years_list):
+            try:
+                gif_img.seek(frame_index)
+                gif_img.convert("RGB").save(
+                    os.path.join(PUBLIC_FRAMES_DIR, f"{asset_base}_{year}.jpg"),
+                    "JPEG",
+                    quality=jpeg_quality,
+                )
+            except EOFError:
+                break
 
-    manifest_path = os.path.join(PUBLIC_FRAMES_DIR, f"{asset_base}_manifest.json")
-    with open(manifest_path, "w", encoding="utf-8") as file:
-        json.dump({"years": years_list}, file)
+        manifest_path = os.path.join(PUBLIC_FRAMES_DIR, f"{asset_base}_manifest.json")
+        with open(manifest_path, "w", encoding="utf-8") as file:
+            json.dump({"years": years_list}, file)
 
-    print(f"Saved {len(years_list)} frames -> {PUBLIC_FRAMES_DIR}")
-    fig.savefig(os.path.join(PUBLIC_GRAPHS_DIR, f"{asset_base}.png"), dpi=dpi)
+        print(f"Saved {len(years_list)} frames -> {PUBLIC_FRAMES_DIR}")
+    finally:
+        if os.path.exists(gif_path):
+            os.remove(gif_path)

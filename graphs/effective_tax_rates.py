@@ -5,7 +5,7 @@ Effective tax rate by percentile group, animated by year.
 Data: Piketty, Saez & Zucman (2022) - Appendix Tables II (Distributional)
       https://gabriel-zucman.eu/usdina/
 Units: Effective tax rate
-Output: public/graphs/effective_tax_rates.gif
+Output: public/graphs/frames/effective_tax_rates_*.jpg
 """
 
 from __future__ import annotations
