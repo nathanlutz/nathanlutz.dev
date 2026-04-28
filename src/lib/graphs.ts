@@ -2,6 +2,8 @@ export interface GraphMeta {
   slug: string;
   title: string;
   description: string;
+  postedDate: string;
+  graphType: string;
   attribution: { text: string; href: string };
   thumbnailSrc: string;
   gifAlt: string;
@@ -26,6 +28,8 @@ function createPszGraph({
   slug,
   title,
   description,
+  postedDate,
+  graphType,
   gifAlt,
   codeFile,
   assetBase,
@@ -34,6 +38,8 @@ function createPszGraph({
   slug: string;
   title: string;
   description: string;
+  postedDate: string;
+  graphType: string;
   gifAlt: string;
   codeFile: string;
   assetBase: string;
@@ -43,6 +49,8 @@ function createPszGraph({
     slug,
     title,
     description,
+    postedDate,
+    graphType,
     attribution: PSZ_ATTRIBUTION,
     thumbnailSrc: `/graphs/frames/${assetBase}_${thumbnailYear}.jpg`,
     gifAlt,
@@ -59,6 +67,8 @@ export const graphs: GraphMeta[] = [
     title: "US Wealth Distribution (1945–2019)",
     description:
       "Mean net worth per adult by wealth group, animated annually. Adjusted for inflation to 2019 dollars.",
+    postedDate: "2026-04-24",
+    graphType: "GIF",
     gifAlt: "Animated chart of mean US net worth by wealth group, 1945–2019",
     codeFile: "wealth_distribution.py",
     assetBase: "wealth_distribution",
@@ -69,12 +79,16 @@ export const graphs: GraphMeta[] = [
     title: "US Effective Tax Rates by Percentile Over Time",
     description:
       "Effective tax rates by percentile group, animated annually from 1913 to 2019.",
+    postedDate: "2026-04-27",
+    graphType: "GIF",
     gifAlt: "Animated chart of US effective tax rates by percentile group over time",
     codeFile: "effective_tax_rates.py",
     assetBase: "effective_tax_rates",
     thumbnailYear: 2019,
   }),
-];
+].sort(
+  (a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime()
+);
 
 export function getGraphBySlug(slug: string): GraphMeta | undefined {
   return graphs.find((g) => g.slug === slug);
