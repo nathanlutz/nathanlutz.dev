@@ -1,24 +1,16 @@
 """
 US Effective Tax Rates by Percentile Over Time, 1913-2019
-Effective tax rate by percentile group, animated by year.
+Effective tax rate by percentile group, one series of points per year.
 
 Data: Piketty, Saez & Zucman (2022) - Appendix Tables II (Distributional)
       https://gabriel-zucman.eu/usdina/
-Units: Effective tax rate
-Output: public/graphs/frames/effective_tax_rates_*.jpg
+Units: Effective tax rate (share of pre-tax income), combined federal/state/local
+Output: content/graphs/us-effective-tax-rates-by-percentile.json
 """
 
 from __future__ import annotations
 
-import matplotlib.animation as animation
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
-
-from psz_graph_utils import (
-    load_psz_workbook,
-    save_animation_and_frames,
-    smooth_curve,
-)
+from psz_graph_utils import load_psz_workbook, write_graph_json
 
 wb = load_psz_workbook()
 ws = wb["taxrates"]
@@ -26,6 +18,7 @@ ws = wb["taxrates"]
 headers = next(ws.iter_rows(values_only=True))
 column_index = {header: index for index, header in enumerate(headers) if header is not None}
 
+# x position, tick label, source column
 GROUPS = [
     (1, "90", "taxtop10"),
     (2, "95", "taxtop5"),
@@ -52,63 +45,29 @@ for row in ws.iter_rows(min_row=2, values_only=True):
 
 years = [year for year in sorted(plot_data) if 1913 <= year <= 2019]
 
-fig, ax = plt.subplots(figsize=(13, 7))
-plt.subplots_adjust(left=0.1, right=0.97, top=0.88, bottom=0.18)
-
-line, = ax.plot([], [], color="#2563eb", linewidth=2.5, zorder=3)
-dots, = ax.plot([], [], "o", color="#2563eb", markersize=5, zorder=4)
-yr_label = ax.text(
-    0.97,
-    0.95,
-    "",
-    transform=ax.transAxes,
-    fontsize=40,
-    fontweight="bold",
-    ha="right",
-    va="top",
-    color="#231f20",
-    alpha=0.2,
-)
-
-ax.set_xlim(0.75, 6.25)
-ax.set_ylim(0, 0.8)
-ax.yaxis.set_major_formatter(FuncFormatter(lambda value, _: f"{value * 100:.0f}%"))
-ax.set_xticks([group[0] for group in GROUPS])
-ax.set_xticklabels([group[1] for group in GROUPS], fontsize=9)
-ax.set_xlabel("Percentile", fontsize=11)
-ax.set_ylabel("Effective tax rate", fontsize=11)
-ax.set_title(
-    "Effective Tax Rate by Percentile, USA 1913-2019\n"
-    "Source: Piketty, Saez & Zucman (2022) - combined federal, state, and local taxes",
-    fontsize=12,
-)
-ax.grid(True, alpha=0.3)
-
-
-def update(frame_index: int):
-    points = plot_data[years[frame_index]]
-    smooth_xs, smooth_ys = smooth_curve(points, include_origin=False)
-    line.set_data(smooth_xs, smooth_ys)
-    dots.set_data([point[0] for point in points], [point[1] for point in points])
-    yr_label.set_text(str(years[frame_index]))
-    return line, dots, yr_label
-
-
-ani = animation.FuncAnimation(
-    fig,
-    update,
-    frames=len(years),
-    interval=700,
-    blit=False,
-    repeat=True,
-    repeat_delay=1500,
-)
-
-save_animation_and_frames(
-    fig,
-    ani,
-    asset_base="effective_tax_rates",
-    years=years,
-    fps=1.3,
-    dpi=120,
+write_graph_json(
+    slug="us-effective-tax-rates-by-percentile",
+    title="US Effective Tax Rates by Percentile Over Time",
+    description=(
+        "Effective tax rates by percentile group, animated annually from 1913 to 2019."
+    ),
+    posted_date="2026-04-27",
+    code_file="effective_tax_rates.py",
+    axes={
+        "x": {
+            "label": "Percentile",
+            "domain": [0.75, 6.25],
+            "ticks": [{"value": x_pos, "label": label} for x_pos, label, _ in GROUPS],
+        },
+        "y": {
+            "label": "Effective tax rate",
+            "domain": [0, 0.8],
+            "format": {"kind": "percent", "decimals": 0},
+        },
+    },
+    series={
+        "label": "Effective tax rate",
+        "color": "#2563eb",
+    },
+    frames=[{"year": year, "points": plot_data[year]} for year in years],
 )
