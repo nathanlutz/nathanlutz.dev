@@ -3,8 +3,12 @@ import { join } from "path";
 import { codeToHtml } from "shiki";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getGraphBySlug } from "@/lib/graphs";
+import { getAllGraphs, getGraphBySlug } from "@/lib/graphs";
 import GraphCard from "@/components/GraphCard";
+
+export function generateStaticParams() {
+  return getAllGraphs().map((graph) => ({ slug: graph.slug }));
+}
 
 export default async function GraphDetail({
   params,
@@ -27,18 +31,6 @@ export default async function GraphDetail({
     lang: "python",
     theme: "dark-plus",
   });
-
-  const manifest: { years: number[] } = JSON.parse(
-    readFileSync(
-      join(process.cwd(), "public", graph.framesManifest.replace(/^\//, "")),
-      "utf-8"
-    )
-  );
-
-  const frames = manifest.years.map((year) => ({
-    year,
-    src: `${graph.framesDir}_${year}.jpg`,
-  }));
 
   return (
     <div className="relative pt-1">
@@ -77,8 +69,7 @@ export default async function GraphDetail({
             .
           </>
         }
-        frames={frames}
-        gifAlt={graph.gifAlt}
+        graph={graph}
         highlightedCode={highlightedCode}
         rawCode={code}
         codeMeta={graph.codeMeta}

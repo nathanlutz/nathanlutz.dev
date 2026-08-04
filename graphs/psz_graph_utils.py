@@ -1,28 +1,36 @@
 """
-Shared helpers for PSZ-based animated graph generation.
+Shared helpers for PSZ-based graph data.
+
+These scripts only crunch numbers. Each one reads the Piketty, Saez & Zucman
+workbook and writes a single JSON file into content/graphs/. All drawing
+happens on the frontend, so nothing here deals in pixels — just the numbers
+plus the handful of axis hints the chart needs to label itself.
 """
 
 from __future__ import annotations
 
 import json
 import os
-import tempfile
 import urllib.request
-import warnings
-from typing import Iterable, Sequence
+from typing import Any, Sequence
 
-import matplotlib.animation as animation
-import numpy as np
 import openpyxl
-from PIL import Image
 
-warnings.filterwarnings("ignore")
-
-GRAPH_DIR = os.path.dirname(__file__)
-PUBLIC_GRAPHS_DIR = os.path.join(GRAPH_DIR, "..", "public", "graphs")
-PUBLIC_FRAMES_DIR = os.path.join(PUBLIC_GRAPHS_DIR, "frames")
+GRAPH_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.normpath(os.path.join(GRAPH_DIR, "..", "content", "graphs"))
 PSZ_CACHE = os.path.join(GRAPH_DIR, "psz2022.xlsx")
 PSZ_URL = "https://gabriel-zucman.eu/files/PSZ2022AppendixTablesII(Distrib).xlsx"
+
+PSZ_ATTRIBUTION = {
+    "text": "Piketty, Saez & Zucman (2022)",
+    "href": "https://gabriel-zucman.eu/usdina/",
+}
+
+DEFAULT_CODE_META = {
+    "language": "Python",
+    "version": "3.13",
+    "libraries": ["openpyxl"],
+}
 
 
 def ensure_psz_workbook() -> str:
@@ -48,27 +56,8 @@ def load_psz_workbook() -> openpyxl.Workbook:
     )
 
 
-def smooth_curve(
-    points: Sequence[tuple[float, float]],
-    *,
-    samples: int = 500,
-    include_origin: bool = True,
-) -> tuple[np.ndarray, np.ndarray]:
-    xs = np.array([point[0] for point in points], dtype=float)
-    ys = np.array([point[1] for point in points], dtype=float)
-
-    if include_origin:
-        xs = np.insert(xs, 0, 0.0)
-        ys = np.insert(ys, 0, 0.0)
-        x_start = 0.0
-    else:
-        x_start = float(xs[0])
-
-    x_smooth = np.linspace(x_start, float(xs[-1]), samples)
-    return x_smooth, np.interp(x_smooth, xs, ys)
-
-
 def smooth_upper_bounds(values: Sequence[float], window: int = 3) -> list[float]:
+    """Rolling max, so a per-frame y-axis grows without jittering."""
     smoothed: list[float] = []
     total = len(values)
 
@@ -80,43 +69,55 @@ def smooth_upper_bounds(values: Sequence[float], window: int = 3) -> list[float]
     return smoothed
 
 
-def save_animation_and_frames(
-    fig,
-    ani: animation.FuncAnimation,
+def write_graph_json(
     *,
-    asset_base: str,
-    years: Iterable[int],
-    fps: float = 1.3,
-    dpi: int = 120,
-    jpeg_quality: int = 85,
-) -> None:
-    os.makedirs(PUBLIC_FRAMES_DIR, exist_ok=True)
+    slug: str,
+    title: str,
+    description: str,
+    posted_date: str,
+    code_file: str,
+    axes: dict[str, Any],
+    series: dict[str, Any],
+    frames: Sequence[dict[str, Any]],
+    attribution: dict[str, str] | None = None,
+    code_meta: dict[str, Any] | None = None,
+    value_places: int = 6,
+) -> str:
+    """Write one graph's metadata and data to content/graphs/<slug>.json.
 
-    with tempfile.NamedTemporaryFile(suffix=".gif", delete=False) as tmp_file:
-        gif_path = tmp_file.name
+    That file is the single source of truth for the graph — the site globs the
+    directory, so adding a graph never means editing TypeScript.
+    """
+    os.makedirs(DATA_DIR, exist_ok=True)
 
-    ani.save(gif_path, writer="pillow", fps=fps, dpi=dpi)
+    payload: dict[str, Any] = {
+        "slug": slug,
+        "title": title,
+        "description": description,
+        "postedDate": posted_date,
+        "attribution": attribution or PSZ_ATTRIBUTION,
+        "codeFile": code_file,
+        "codeMeta": code_meta or DEFAULT_CODE_META,
+        "axes": axes,
+        "series": series,
+        "frames": [
+            {
+                "year": int(frame["year"]),
+                "points": [[x, round(y, value_places)] for x, y in frame["points"]],
+                **(
+                    {"yMax": round(frame["yMax"], value_places)}
+                    if frame.get("yMax") is not None
+                    else {}
+                ),
+            }
+            for frame in frames
+        ],
+    }
 
-    try:
-        gif_img = Image.open(gif_path)
-        years_list = list(years)
+    out_path = os.path.join(DATA_DIR, f"{slug}.json")
+    with open(out_path, "w", encoding="utf-8") as file:
+        json.dump(payload, file, separators=(",", ":"))
 
-        for frame_index, year in enumerate(years_list):
-            try:
-                gif_img.seek(frame_index)
-                gif_img.convert("RGB").save(
-                    os.path.join(PUBLIC_FRAMES_DIR, f"{asset_base}_{year}.jpg"),
-                    "JPEG",
-                    quality=jpeg_quality,
-                )
-            except EOFError:
-                break
-
-        manifest_path = os.path.join(PUBLIC_FRAMES_DIR, f"{asset_base}_manifest.json")
-        with open(manifest_path, "w", encoding="utf-8") as file:
-            json.dump({"years": years_list}, file)
-
-        print(f"Saved {len(years_list)} frames -> {PUBLIC_FRAMES_DIR}")
-    finally:
-        if os.path.exists(gif_path):
-            os.remove(gif_path)
+    size_kb = os.path.getsize(out_path) / 1024
+    print(f"Wrote {len(payload['frames'])} frames -> {out_path} ({size_kb:.1f} KB)")
+    return out_path

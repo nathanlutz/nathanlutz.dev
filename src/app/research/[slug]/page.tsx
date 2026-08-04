@@ -1,8 +1,12 @@
-import { getPaperBySlug } from '@/lib/papers';
+import { getAllPaperSlugs, getPaperBySlug } from '@/lib/papers';
 import { isFeatureEnabled } from '@/lib/features';
 import { notFound } from 'next/navigation';
 import { ExternalLink, Calendar, User } from 'lucide-react';
 import { MDXContent } from '@/components/MDXContent';
+
+export function generateStaticParams() {
+  return getAllPaperSlugs().map((slug) => ({ slug }));
+}
 
 export default async function PaperPage({
   params

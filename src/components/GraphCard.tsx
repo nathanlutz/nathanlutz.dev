@@ -2,17 +2,12 @@
 
 import { useState } from "react";
 import GraphPlayer from "./GraphPlayer";
-
-interface Frame {
-  year: number;
-  src: string;
-}
+import type { GraphData } from "@/lib/graph-types";
 
 interface Props {
   title: string;
   description: React.ReactNode;
-  frames: Frame[];
-  gifAlt: string;
+  graph: GraphData;
   highlightedCode: string;
   rawCode: string;
   codeMeta: { language: string; version: string; libraries: string[] };
@@ -21,8 +16,7 @@ interface Props {
 export default function GraphCard({
   title,
   description,
-  frames,
-  gifAlt,
+  graph,
   highlightedCode,
   rawCode,
   codeMeta,
@@ -63,7 +57,7 @@ export default function GraphCard({
       </div>
 
       {tab === "chart" ? (
-        <GraphPlayer frames={frames} alt={gifAlt} />
+        <GraphPlayer key={graph.slug} graph={graph} />
       ) : (
         <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-[#0f111a] shadow-[0_20px_60px_rgba(15,17,26,0.28)]">
           <div className="relative border-b border-white/8 bg-[#181c26] px-4 py-3">

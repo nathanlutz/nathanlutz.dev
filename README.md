@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# nathanlutz.dev
 
-## Getting Started
+Personal site — Next.js 16 (App Router), Tailwind v4, MDX for research notes.
 
-First, run the development server:
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Graphs & Data
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Each graph is a Python script that crunches numbers and writes **one JSON file**.
+The site globs `content/graphs/*.json`, so adding a graph never means editing
+TypeScript — the JSON is the single source of truth for both the data and the
+metadata (title, description, axes, colors, attribution).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The charts are rendered as SVG on the frontend, which is why the repo stores
+~10 KB of numbers per graph instead of a few hundred rasterized frames.
 
-## Learn More
+### Regenerating the data
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pip install -r graphs/requirements.txt
+python graphs/effective_tax_rates.py
+python graphs/wealth_distribution.py
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The source workbook (`graphs/psz2022.xlsx`, ~40 MB) is gitignored and downloaded
+automatically on first run from [gabriel-zucman.eu](https://gabriel-zucman.eu/usdina/).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Adding a graph
 
-## Deploy on Vercel
+1. Copy an existing script in `graphs/` as a starting point.
+2. Pull your numbers into `frames` — one entry per step of the animation,
+   each with a `year` and a list of `[x, y]` points.
+3. Call `write_graph_json(...)` with the slug, copy, axes, and series color.
+   Pass a per-frame `yMax` if the y-axis should grow over time.
+4. Run the script. The new graph appears at `/graphs/<slug>` automatically.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Nothing else needs touching — no route, no component, no config.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Layout
+
+| Path | What it holds |
+|---|---|
+| `graphs/*.py` | Data extraction; also rendered in the "Source" tab |
+| `content/graphs/*.json` | Generated data + metadata (committed) |
+| `src/lib/graphs.ts` | Globs and parses the JSON (server-only) |
+| `src/lib/graph-types.ts` | Shared types, value formatting, tick math |
+| `src/components/GraphChart.tsx` | Stateless SVG chart |
+| `src/components/GraphPlayer.tsx` | Playback, scrubbing, hover |
+
+## Research notes
+
+MDX files in `content/research/`, gated behind a feature flag:
+
+```bash
+NEXT_PUBLIC_FEATURE_RESEARCH_NOTES=true npm run dev
+```
